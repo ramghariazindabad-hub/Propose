@@ -2,10 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sukhman ❤️</title>
 
 <style>
+
 body{
 margin:0;
 height:100vh;
@@ -18,41 +19,44 @@ font-family:Segoe UI,sans-serif;
 color:white;
 }
 
-.card{
-z-index:10;
-padding:30px;
-width:85%;
-max-width:400px;
-border-radius:25px;
-text-align:center;
-background:rgba(255,255,255,.08);
-backdrop-filter:blur(12px);
-box-shadow:0 0 35px hotpink;
-}
-
-.star,.heart,.confetti{
-position:fixed;
-pointer-events:none;
-}
-
+/* stars */
 .star{
+position:fixed;
 width:2px;
 height:2px;
 background:white;
 animation:twinkle 2s infinite alternate;
 }
-
 @keyframes twinkle{
-from{opacity:.2}
-to{opacity:1}
+from{opacity:.2;}
+to{opacity:1;}
+}
+
+/* card */
+.card{
+width:85%;
+max-width:400px;
+padding:30px;
+border-radius:25px;
+text-align:center;
+background:rgba(255,255,255,.08);
+backdrop-filter:blur(15px);
+box-shadow:0 0 40px hotpink;
+z-index:10;
+animation:glow 2s infinite alternate;
+}
+
+@keyframes glow{
+from{box-shadow:0 0 20px hotpink;}
+to{box-shadow:0 0 50px deeppink;}
 }
 
 button{
 padding:12px 25px;
-border:none;
-border-radius:15px;
 font-size:18px;
 margin:8px;
+border:none;
+border-radius:15px;
 cursor:pointer;
 }
 
@@ -63,22 +67,38 @@ color:white;
 
 .no{
 background:white;
+position:relative;
 }
 
+#loveMsg{
+display:none;
+font-size:22px;
+margin-top:15px;
+color:#ff77aa;
+}
+
+/* hearts */
 .heart{
-font-size:24px;
+position:fixed;
+font-size:25px;
+pointer-events:none;
 animation:fall 4s linear forwards;
 }
 
 @keyframes fall{
-0%{transform:translateY(-50px)}
+0%{
+transform:translateY(-50px);
+opacity:1;
+}
 100%{
 transform:translateY(100vh);
 opacity:0;
 }
 }
 
+/* confetti */
 .confetti{
+position:fixed;
 width:8px;
 height:8px;
 border-radius:50%;
@@ -86,12 +106,6 @@ background:hsl(var(--h),100%,50%);
 animation:fall 3s linear forwards;
 }
 
-#loveMsg{
-display:none;
-font-size:22px;
-color:#ff77aa;
-margin-top:15px;
-}
 </style>
 </head>
 
@@ -103,102 +117,139 @@ margin-top:15px;
 
 <div class="card">
 
-<h1>Sukhman 💖<br>Will you be mine?</h1>
+<h1>Sukhman ❤️<br>Will you be mine?</h1>
 
 <p>
 Mai tahnu like krda ❤️<br>
 bt i can't ask directly to you...
 </p>
 
-<p>From Navi ✨</p>
+<p>From Navi 💖</p>
 
 <button class="yes" onclick="yesClick()">YES</button>
-<button class="no" id="noBtn" onmouseover="moveNo()">NO 😜</button>
 
-<div id="loveMsg"></div>
+<button class="no" id="noBtn"
+onmouseover="moveNo()">
+NO 😜
+</button>
+
+<div id="loveMsg">
+NAVI JI BANYI GAL ❤️❤️❤️ HOGI HAA ❤️
+</div>
 
 </div>
 
 <script>
 
-for(let i=0;i<120;i++){
+/* stars */
+for(let i=0;i<150;i++){
+
 let s=document.createElement("div");
+
 s.className="star";
+
 s.style.left=Math.random()*100+"vw";
+
 s.style.top=Math.random()*100+"vh";
+
 document.body.appendChild(s);
+
 }
+
+/* no jump */
 
 function moveNo(){
-let b=document.getElementById("noBtn");
-b.style.position="absolute";
-b.style.left=Math.random()*80+"%";
-b.style.top=Math.random()*80+"%";
+
+let btn=document.getElementById("noBtn");
+
+btn.style.position="absolute";
+
+btn.style.left=Math.random()*80+"%";
+
+btn.style.top=Math.random()*80+"%";
+
 }
 
-function createEffects(){
+/* hearts + confetti */
+
+function effects(){
 
 for(let i=0;i<60;i++){
 
 let h=document.createElement("div");
+
 h.className="heart";
+
 h.innerHTML="❤️";
+
 h.style.left=Math.random()*100+"vw";
+
 h.style.fontSize=(15+Math.random()*30)+"px";
+
 document.body.appendChild(h);
 
-setTimeout(()=>h.remove(),4000);
+setTimeout(()=>{
+
+h.remove()
+
+},4000);
 
 let c=document.createElement("div");
+
 c.className="confetti";
+
 c.style.left=Math.random()*100+"vw";
-c.style.setProperty("--h",Math.random()*360);
+
+c.style.setProperty(
+"--h",
+Math.random()*360
+);
+
 document.body.appendChild(c);
 
-setTimeout(()=>c.remove(),3000);
-}
-}
+setTimeout(()=>{
 
-function typeText(text){
+c.remove()
 
-let msg=document.getElementById("loveMsg");
-msg.style.display="block";
-msg.innerHTML="";
-
-let i=0;
-
-let x=setInterval(()=>{
-
-msg.innerHTML+=text.charAt(i);
-
-i++;
-
-if(i>=text.length){
-clearInterval(x);
-}
-
-},70);
+},3000);
 
 }
+
+}
+
+/* yes */
 
 function yesClick(){
 
-document.getElementById("song").play();
+document.getElementById(
+"loveMsg"
+).style.display="block";
 
-createEffects();
+document.getElementById(
+"song"
+).play();
 
-typeText("NAVI JI BANYI GAL ❤️❤️❤️ HOGI HAA ❤️");
+effects();
 
-/* Pushover */
-fetch('https://api.pushover.net/1/messages.json',{
+/* notification */
+
+fetch(
+'https://api.pushover.net/1/messages.json',
+{
 method:'POST',
 headers:{
-'Content-Type':'application/x-www-form-urlencoded'
+'Content-Type':
+'application/x-www-form-urlencoded'
 },
 body:new URLSearchParams({
-token:'PUT_YOUR_TOKEN_HERE',
-user:'PUT_YOUR_USER_KEY_HERE',
-message:'NAVI JI BANYI GAL ❤️❤️❤️ HOGI HAA ❤️'
+
+token:'YOUR_TOKEN',
+
+user:'YOUR_USERKEY',
+
+message:
+'NAVI JI BANYI GAL ❤️❤️❤️ HOGI HAA ❤️'
+
 })
 });
 
