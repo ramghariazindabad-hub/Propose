@@ -2,52 +2,57 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Sukhman ❤️</title>
 
 <style>
 body{
 margin:0;
 height:100vh;
+overflow:hidden;
 display:flex;
 justify-content:center;
 align-items:center;
 background:black;
-overflow:hidden;
 font-family:Segoe UI,sans-serif;
 color:white;
 }
 
-.star{
+.card{
+z-index:10;
+padding:30px;
+width:85%;
+max-width:400px;
+border-radius:25px;
+text-align:center;
+background:rgba(255,255,255,.08);
+backdrop-filter:blur(12px);
+box-shadow:0 0 35px hotpink;
+}
+
+.star,.heart,.confetti{
 position:fixed;
+pointer-events:none;
+}
+
+.star{
 width:2px;
 height:2px;
 background:white;
 animation:twinkle 2s infinite alternate;
 }
-@keyframes twinkle{
-from{opacity:.2;}
-to{opacity:1;}
-}
 
-.card{
-width:85%;
-max-width:380px;
-padding:30px;
-border-radius:20px;
-text-align:center;
-background:rgba(255,255,255,.08);
-backdrop-filter:blur(10px);
-box-shadow:0 0 30px hotpink;
-z-index:10;
+@keyframes twinkle{
+from{opacity:.2}
+to{opacity:1}
 }
 
 button{
 padding:12px 25px;
-margin:10px;
 border:none;
 border-radius:15px;
 font-size:18px;
+margin:8px;
 cursor:pointer;
 }
 
@@ -58,37 +63,38 @@ color:white;
 
 .no{
 background:white;
-color:black;
-position:relative;
-}
-
-#loveMsg{
-display:none;
-font-size:25px;
-margin-top:20px;
-color:#ff6ba5;
 }
 
 .heart{
-position:fixed;
-font-size:25px;
+font-size:24px;
 animation:fall 4s linear forwards;
-pointer-events:none;
 }
 
 @keyframes fall{
-0%{
-transform:translateY(-50px);
-opacity:1;
-}
+0%{transform:translateY(-50px)}
 100%{
 transform:translateY(100vh);
 opacity:0;
 }
 }
 
+.confetti{
+width:8px;
+height:8px;
+border-radius:50%;
+background:hsl(var(--h),100%,50%);
+animation:fall 3s linear forwards;
+}
+
+#loveMsg{
+display:none;
+font-size:22px;
+color:#ff77aa;
+margin-top:15px;
+}
 </style>
 </head>
+
 <body>
 
 <audio id="song">
@@ -97,25 +103,19 @@ opacity:0;
 
 <div class="card">
 
-<h1>Sukhman ❤️<br>Will you be mine?</h1>
+<h1>Sukhman 💖<br>Will you be mine?</h1>
 
 <p>
-Mai tahnu like krda <br>
-bt i can't ask directly to you ❤️
+Mai tahnu like krda ❤️<br>
+bt i can't ask directly to you...
 </p>
 
-<p>From Navi 💖</p>
+<p>From Navi ✨</p>
 
 <button class="yes" onclick="yesClick()">YES</button>
+<button class="no" id="noBtn" onmouseover="moveNo()">NO 😜</button>
 
-<button class="no" id="noBtn"
-onmouseover="moveNo()">
-NO 😜
-</button>
-
-<div id="loveMsg">
-NAVI JI BANYI GAL ❤️❤️❤️ HOGI HAA ❤️
-</div>
+<div id="loveMsg"></div>
 
 </div>
 
@@ -130,67 +130,76 @@ document.body.appendChild(s);
 }
 
 function moveNo(){
-
-let btn=document.getElementById("noBtn");
-
-btn.style.position="absolute";
-btn.style.left=Math.random()*80+"%";
-btn.style.top=Math.random()*80+"%";
-
+let b=document.getElementById("noBtn");
+b.style.position="absolute";
+b.style.left=Math.random()*80+"%";
+b.style.top=Math.random()*80+"%";
 }
 
-function createHearts(){
+function createEffects(){
 
-for(let i=0;i<50;i++){
+for(let i=0;i<60;i++){
 
 let h=document.createElement("div");
-
 h.className="heart";
-
 h.innerHTML="❤️";
-
 h.style.left=Math.random()*100+"vw";
-
-h.style.fontSize=(15+Math.random()*35)+"px";
-
+h.style.fontSize=(15+Math.random()*30)+"px";
 document.body.appendChild(h);
 
-setTimeout(()=>{
-h.remove()
-},4000);
+setTimeout(()=>h.remove(),4000);
 
+let c=document.createElement("div");
+c.className="confetti";
+c.style.left=Math.random()*100+"vw";
+c.style.setProperty("--h",Math.random()*360);
+document.body.appendChild(c);
+
+setTimeout(()=>c.remove(),3000);
 }
+}
+
+function typeText(text){
+
+let msg=document.getElementById("loveMsg");
+msg.style.display="block";
+msg.innerHTML="";
+
+let i=0;
+
+let x=setInterval(()=>{
+
+msg.innerHTML+=text.charAt(i);
+
+i++;
+
+if(i>=text.length){
+clearInterval(x);
+}
+
+},70);
 
 }
 
 function yesClick(){
 
-document.getElementById("loveMsg").style.display="block";
-
 document.getElementById("song").play();
 
-createHearts();
+createEffects();
 
-fetch(
-'https://api.pushover.net/1/messages.json',
-{
+typeText("NAVI JI BANYI GAL ❤️❤️❤️ HOGI HAA ❤️");
+
+/* Pushover */
+fetch('https://api.pushover.net/1/messages.json',{
 method:'POST',
-
 headers:{
-'Content-Type':
-'application/x-www-form-urlencoded'
+'Content-Type':'application/x-www-form-urlencoded'
 },
-
 body:new URLSearchParams({
-
-token:'YOUR_PUSHOVER_APP_TOKEN',
-
-user:'uej6ctdafuu8u3n23m3s9ky1qjm54k',
-
+token:'PUT_YOUR_TOKEN_HERE',
+user:'PUT_YOUR_USER_KEY_HERE',
 message:'NAVI JI BANYI GAL ❤️❤️❤️ HOGI HAA ❤️'
-
 })
-
 });
 
 }
