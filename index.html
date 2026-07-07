@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sukhman ❤️</title>
 
 <style>
@@ -31,20 +31,6 @@ color:white;
 100%{background-position:0% 50%}
 }
 
-.star{
-position:fixed;
-width:2px;
-height:2px;
-background:white;
-border-radius:50%;
-animation:twinkle 2s infinite alternate;
-}
-
-@keyframes twinkle{
-from{opacity:.2}
-to{opacity:1}
-}
-
 .card{
 width:90%;
 max-width:400px;
@@ -54,13 +40,7 @@ text-align:center;
 background:rgba(255,255,255,.1);
 backdrop-filter:blur(15px);
 box-shadow:0 0 40px hotpink;
-animation:glow 2s infinite alternate;
 z-index:10;
-}
-
-@keyframes glow{
-from{box-shadow:0 0 20px hotpink;}
-to{box-shadow:0 0 60px deeppink;}
 }
 
 button{
@@ -113,8 +93,14 @@ opacity:0;
 
 <body>
 
-<audio id="song">
-<source src="song.mp3" type="audio/mp3">
+<!-- Background song -->
+<audio id="bgSong" autoplay loop>
+  <source src="song.mp3" type="audio/mp3">
+</audio>
+
+<!-- YES button song -->
+<audio id="yesSong">
+  <source src="yes.mp3" type="audio/mp3">
 </audio>
 
 <div class="card">
@@ -146,16 +132,12 @@ NAVI JI BANYI GAL ❤️❤️❤️ HOGI HAA ❤️
 
 <script>
 
-/* stars */
-for(let i=0;i<150;i++){
-let s=document.createElement("div");
-s.className="star";
-s.style.left=Math.random()*100+"vw";
-s.style.top=Math.random()*100+"vh";
-document.body.appendChild(s);
-}
+/* Auto play fix for mobile */
+document.body.addEventListener("click",()=>{
+  document.getElementById("bgSong").play().catch(()=>{});
+},{once:true});
 
-/* crazy NO button */
+/* Crazy NO button */
 function moveNo(){
 
 let btn=document.getElementById("noBtn");
@@ -172,7 +154,7 @@ scale(${0.8+Math.random()})`;
 
 }
 
-/* hearts */
+/* Hearts */
 function hearts(){
 
 for(let i=0;i<80;i++){
@@ -195,20 +177,27 @@ h.remove()
 
 }
 
-/* yes click */
+/* YES click */
 function yesClick(){
 
-document.getElementById(
-"song"
-).play();
+/* Stop first song */
+let bg=document.getElementById("bgSong");
+bg.pause();
+bg.currentTime=0;
 
+/* Start second song */
+let yes=document.getElementById("yesSong");
+yes.play();
+
+/* Show message */
 document.getElementById(
 "loveMsg"
 ).style.display="block";
 
+/* Effects */
 hearts();
 
-/* notification */
+/* Notification */
 fetch(
 'https://api.pushover.net/1/messages.json',
 {
@@ -217,11 +206,9 @@ headers:{
 'Content-Type':'application/x-www-form-urlencoded'
 },
 body:new URLSearchParams({
-
 token:'am3g2syju4yajivhnvifhigd63sqcg',
 user:'uej6ctdafuu8u3n23m3s9ky1qjm54k',
 message:'NAVI JI BANYI GAL ❤️❤️❤️ HOGI HAA ❤️'
-
 })
 });
 
